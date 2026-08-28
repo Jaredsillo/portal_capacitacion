@@ -1,0 +1,10 @@
+node_modules
+.next
+.env
+.env.local
+*.log
+# Los PDFs subidos por el admin no van al repo:
+# Ignorar todo el contenido de manuales
+/manuales/*
+# Excepto este archivo
+!/manuales/SGCUH-CSRDT-M-001.pdf
