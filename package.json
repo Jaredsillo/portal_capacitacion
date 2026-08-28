@@ -9,10 +9,10 @@
     "db:setup": "node db/setup.js"
   },
   "dependencies": {
-    "next": "14.2.5",
+    "next": "16.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "next-auth": "5.0.0-beta.20",
+    "next-auth": "5.0.0-beta.32",
     "mysql2": "^3.11.0",
     "nodemailer": "^6.9.14",
     "react-pdf": "^9.1.0",
