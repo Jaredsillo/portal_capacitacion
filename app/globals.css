@@ -7,24 +7,6 @@
   --shadow:rgba(20,33,58,.22);
 }
 
-/* ── Modo oscuro: sigue el sistema, o el botón de la barra superior ── */
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --azul:#4C8DFF;--azul-2:#8AB4FF;--azul-3:#6AA0FF;
-    --verde:#7FE23D;--verde-2:#7FE23D;--verde-soft:#1E3315;
-    --ink:#EAEEF7;--muted:#9AA7C2;--bg:#0F1524;--card:#171E30;--line:#2A3450;
-    --error:#FF7A6E;--error-soft:#3A1E1E;--focus:#7FB0FF;
-    --shadow:rgba(0,0,0,.55);
-  }
-}
-:root[data-theme="dark"]{
-  --azul:#4C8DFF;--azul-2:#8AB4FF;--azul-3:#6AA0FF;
-  --verde:#7FE23D;--verde-2:#7FE23D;--verde-soft:#1E3315;
-  --ink:#EAEEF7;--muted:#9AA7C2;--bg:#0F1524;--card:#171E30;--line:#2A3450;
-  --error:#FF7A6E;--error-soft:#3A1E1E;--focus:#7FB0FF;
-  --shadow:rgba(0,0,0,.55);
-}
-
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;transition:background-color .2s,color .2s;}
@@ -54,8 +36,6 @@ button,[role="button"]{-webkit-tap-highlight-color:transparent;}
 .ava{width:34px;height:34px;border-radius:50%;background:var(--azul);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;}
 .link{background:none;border:0;font:inherit;font-size:13px;font-weight:600;color:var(--azul);cursor:pointer;text-decoration:none;}
 .link:hover{text-decoration:underline;}
-.themebtn{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--muted);display:grid;place-items:center;cursor:pointer;flex:none;}
-.themebtn:hover{color:var(--azul);border-color:var(--azul);}
 
 /* ── Overlay de modales (visor, quiz, editor) ── */
 .ov{position:fixed;inset:0;background:rgba(15,25,48,.55);display:grid;place-items:center;padding:20px;z-index:50;}
