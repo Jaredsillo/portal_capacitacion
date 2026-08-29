@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/guard";
 import { getSistemasDeUsuario } from "@/lib/queries";
 import { signOut } from "@/auth";
@@ -5,6 +6,7 @@ import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
   const user = await requireUser();
+  if (user.rol === "th") redirect("/rh"); // Talento Humano solo ve su propio panel.
   const rows = await getSistemasDeUsuario(user.id);
 
   // Normaliza los datos para el cliente.

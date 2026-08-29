@@ -28,7 +28,7 @@ export default function RHClient({ colaboradores, rolViendo, salir }) {
     <div>
       <style>{CSS}</style>
       <TopBar title="Panel de Talento Humano" salir={salir}>
-        <a className="link" href="/dashboard">Ver como empleado</a>
+        {rolViendo === "admin" && <a className="link" href="/dashboard">Ver como empleado</a>}
         {rolViendo === "admin" && <a className="link" href="/admin">Admin</a>}
       </TopBar>
 

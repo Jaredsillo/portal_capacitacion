@@ -87,7 +87,7 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
         <div className="col-hide" style={{ textAlign: "right" }}><div className="n">{usuario.nombre}</div><div className="e">{usuario.correo}</div></div>
         <div className="ava" aria-hidden="true">{(usuario.nombre || "U")[0]}</div>
         {usuario.rol === "admin" && <a className="link" href="/admin">Admin</a>}
-        {(usuario.rol === "th" || usuario.rol === "admin") && <a className="link" href="/rh">RH</a>}
+        {usuario.rol === "admin" && <a className="link" href="/rh">RH</a>}
       </TopBar>
 
       <div className="wrap">

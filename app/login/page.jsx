@@ -3,7 +3,7 @@ import { auth, signIn } from "@/auth";
 
 export default async function LoginPage() {
   const session = await auth();
-  if (session?.user?.id) redirect("/dashboard");
+  if (session?.user?.id) redirect(session.user.rol === "th" ? "/rh" : "/dashboard");
 
   async function entrar() {
     "use server";
