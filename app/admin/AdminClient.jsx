@@ -52,7 +52,12 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
     const r = await fetch("/api/admin/manual-upload", { method: "POST", body: fd });
     if (r.ok) {
       const d = await r.json();
-      notar(d.tipo === "video" ? "Video subido correctamente." : `Manual subido (${d.paginas} páginas).`, "ok");
+      notar(
+        d.tipo === "video" ? "Video subido correctamente."
+          : d.tipo === "ppt" ? "Presentación subida correctamente."
+          : `Manual subido (${d.paginas} páginas).`,
+        "ok"
+      );
       setSubida({ sistema_id: "", titulo: "", codigo: "", version: "V00", archivo: null });
       router.refresh();
     }
@@ -268,7 +273,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
         {tab === "manuales" && (
           <div className="assign">
             <form className="assignbox" onSubmit={subirManual} noValidate>
-              <h4>Subir material (PDF o video)</h4>
+              <h4>Subir material (PDF, PowerPoint o video)</h4>
               <p className="subt">El archivo se guarda privado. Después puedes configurar su juego.</p>
               <label className="fl">Sistema *
                 <select className={`fi ${erroresSubida.sistema_id ? "campo-error" : ""}`} value={subida.sistema_id}
@@ -282,7 +287,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
               <Field label="Versión" val={subida.version} on={(v) => setSubida({ ...subida, version: v })} />
               <label className="fl">Archivo *
                 <input className={`fi ${erroresSubida.archivo ? "campo-error" : ""}`} type="file"
-                  accept="application/pdf,video/mp4,video/webm,video/ogg,video/quicktime,video/x-m4v"
+                  accept="application/pdf,video/mp4,video/webm,video/ogg,video/quicktime,video/x-m4v,.ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
                   onChange={(e) => { setSubida({ ...subida, archivo: e.target.files[0] }); setErroresSubida((er) => ({ ...er, archivo: false })); }} />
               </label>
               <button className="save" type="submit">Subir material</button>
@@ -297,7 +302,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
                       <td>{m.sistema}</td>
                       <td>
                         <div>{m.tieneQuiz ? <span className="ev ev-leido">configurado</span> : <span className="ev ev-admin">sin juego</span>}</div>
-                        <div style={{ marginTop: 4 }}><span className="ev ev-ver">{m.tipo === "video" ? "video" : "pdf"}</span></div>
+                        <div style={{ marginTop: 4 }}><span className="ev ev-ver">{m.tipo}</span></div>
                       </td>
                       <td><button className="mini" style={{ color: "var(--azul)" }} onClick={() => setEditando(m)}>
                         {m.tieneQuiz ? "Editar" : "Configurar juego"}</button></td>

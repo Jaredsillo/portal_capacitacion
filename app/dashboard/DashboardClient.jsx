@@ -7,7 +7,7 @@ import Quiz from "@/components/Quiz";
 import TopBar from "@/components/TopBar";
 import Modal from "@/components/Modal";
 import Toast from "@/components/Toast";
-import { IconLock, IconDoc, IconVideo, IconGame } from "@/components/icons";
+import { IconLock, IconDoc, IconVideo, IconGame, IconSlides, IconDownload, IconCheckCircle } from "@/components/icons";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -18,6 +18,7 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
   const [pagina, setPagina] = useState(1);
   const [maxVista, setMaxVista] = useState(1);
   const [videoPct, setVideoPct] = useState(0);
+  const [pptAbierto, setPptAbierto] = useState(false);
   const [quizSistema, setQuizSistema] = useState(null);
   const [toast, setToast] = useState(null);
 
@@ -28,7 +29,7 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
   function notar(mensaje, tipo = "info") { setToast({ mensaje, tipo }); setTimeout(() => setToast(null), 2600); }
 
   async function abrir(s) {
-    setVisor(s); setPagina(1); setMaxVista(1); setNumPages(s.paginas || 0); setVideoPct(0);
+    setVisor(s); setPagina(1); setMaxVista(1); setNumPages(s.paginas || 0); setVideoPct(0); setPptAbierto(false);
     fetch("/api/actividad", { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ evento: "ver_manual", sistemaId: s.id, detalle: `Abrió el manual de ${s.nombre}` }) });
   }
@@ -37,8 +38,13 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
     const p = Math.min(Math.max(1, n), tope);
     setPagina(p); setMaxVista((m) => Math.max(m, p));
   }
+  function abrirPpt() {
+    setPptAbierto(true);
+    window.open(`/api/manual/${visor.id}`, "_blank", "noopener");
+  }
   const esVideo = visor?.materialTipo === "video";
-  const alFinal = visor && (esVideo ? videoPct >= 95 : numPages > 0 && maxVista >= numPages);
+  const esPpt = visor?.materialTipo === "ppt";
+  const alFinal = visor && (esVideo ? videoPct >= 95 : esPpt ? pptAbierto : numPages > 0 && maxVista >= numPages);
 
   // Al llegar al final: si hay juego configurado, se juega; si no, se marca leído directo.
   function terminarManual() {
@@ -124,6 +130,8 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
                   {s.tieneManual
                     ? (s.materialTipo === "video"
                         ? <span className="icon-line"><IconVideo /> Video de capacitación</span>
+                        : s.materialTipo === "ppt"
+                        ? <span className="icon-line"><IconSlides /> Presentación PowerPoint</span>
                         : <span className="icon-line"><IconDoc /> Manual · {s.paginas} páginas</span>)
                     : "Material por publicar"}
                 </p>
@@ -147,9 +155,9 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
       </div>
 
       {visor && (
-        <Modal onClose={() => setVisor(null)} className="viewer" ariaLabel={`${esVideo ? "Video" : "Manual"} ${visor.nombre}`}>
+        <Modal onClose={() => setVisor(null)} className="viewer" ariaLabel={`${esVideo ? "Video" : esPpt ? "Presentación" : "Manual"} ${visor.nombre}`}>
           <div className="vhead">
-            <div><div className="k">{esVideo ? "Video" : "Manual"} · {visor.codigo || ""}</div><h3>{visor.nombre}</h3></div>
+            <div><div className="k">{esVideo ? "Video" : esPpt ? "Presentación" : "Manual"} · {visor.codigo || ""}</div><h3>{visor.nombre}</h3></div>
             <button className="x" onClick={() => setVisor(null)} aria-label="Cerrar visor">×</button>
           </div>
           <div className="stage">
@@ -165,6 +173,16 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
                 }}
                 onEnded={() => setVideoPct(100)}
               />
+            ) : esPpt ? (
+              <div className="pptbox">
+                <IconSlides className="pptico" />
+                <p className="pptmsg">Los navegadores no pueden mostrar PowerPoint en línea. Descárgala y ábrela
+                  con PowerPoint (o un lector compatible) para verla completa.</p>
+                <button className="btn prim" onClick={abrirPpt}>
+                  <span className="icon-line"><IconDownload /> Descargar presentación</span>
+                </button>
+                {pptAbierto && <p className="pptok"><IconCheckCircle /> Descargada. Ya puedes continuar.</p>}
+              </div>
             ) : (
               <Document file={`/api/manual/${visor.id}`} onLoadSuccess={({ numPages }) => setNumPages(numPages)}
                 loading={<div className="skel" style={{ height: 480, width: 440 }} aria-label="Cargando manual…" />}
@@ -174,17 +192,19 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
             )}
           </div>
           <div className="vfoot">
-            <div className="readbar">
-              <div className="rt"><div className="rf" style={{ width: `${esVideo ? videoPct : (numPages ? Math.round((maxVista / numPages) * 100) : 0)}%` }} /></div>
-              <span className="rl">
-                {esVideo ? `${videoPct}% del video visto` : `${maxVista} de ${numPages || visor.paginas} páginas vistas`}
-              </span>
-            </div>
+            {!esPpt && (
+              <div className="readbar">
+                <div className="rt"><div className="rf" style={{ width: `${esVideo ? videoPct : (numPages ? Math.round((maxVista / numPages) * 100) : 0)}%` }} /></div>
+                <span className="rl">
+                  {esVideo ? `${videoPct}% del video visto` : `${maxVista} de ${numPages || visor.paginas} páginas vistas`}
+                </span>
+              </div>
+            )}
             <div className="nav">
-              {!esVideo && <button className="navbtn" onClick={() => irPagina(pagina - 1)} disabled={pagina <= 1} aria-label="Página anterior">‹ Anterior</button>}
-              {!esVideo && <div className="slider"><input type="range" min="1" max={numPages || visor.paginas || 1} value={pagina} onChange={(e) => irPagina(+e.target.value)} aria-label="Ir a la página" /></div>}
-              {!esVideo && <span className="ind">Pág. {pagina} / {numPages || visor.paginas}</span>}
-              {!esVideo && <button className="navbtn" onClick={() => irPagina(pagina + 1)} disabled={pagina >= (numPages || visor.paginas)} aria-label="Página siguiente">Siguiente ›</button>}
+              {!esVideo && !esPpt && <button className="navbtn" onClick={() => irPagina(pagina - 1)} disabled={pagina <= 1} aria-label="Página anterior">‹ Anterior</button>}
+              {!esVideo && !esPpt && <div className="slider"><input type="range" min="1" max={numPages || visor.paginas || 1} value={pagina} onChange={(e) => irPagina(+e.target.value)} aria-label="Ir a la página" /></div>}
+              {!esVideo && !esPpt && <span className="ind">Pág. {pagina} / {numPages || visor.paginas}</span>}
+              {!esVideo && !esPpt && <button className="navbtn" onClick={() => irPagina(pagina + 1)} disabled={pagina >= (numPages || visor.paginas)} aria-label="Página siguiente">Siguiente ›</button>}
               <button className="cta" disabled={!alFinal} onClick={terminarManual}>{visor.tieneQuiz ? "Ir al juego" : "Marcar como leído"}</button>
             </div>
           </div>
@@ -269,6 +289,10 @@ const CSS = `
 .stage{background:var(--bg);padding:22px;overflow-y:auto;display:flex;justify-content:center;}
 .stage canvas{box-shadow:0 6px 20px -6px var(--shadow);border-radius:4px;max-width:100%;height:auto!important;}
 .video{width:min(100%,680px);max-height:62vh;border-radius:10px;background:#000;}
+.pptbox{max-width:360px;text-align:center;padding:30px 10px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.pptico{width:44px;height:44px;color:var(--azul);}
+.pptmsg{font-size:13px;color:var(--muted);line-height:1.55;margin:0;}
+.pptok{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--verde-2);margin:0;}
 .vfoot{padding:14px 22px;border-top:1px solid var(--line);}
 .readbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .readbar .rt{flex:1;height:7px;background:var(--line);border-radius:99px;overflow:hidden;}
