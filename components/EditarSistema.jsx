@@ -32,7 +32,7 @@ export default function EditarSistema({ sistema, onCerrar, onGuardado }) {
 
   return (
     <Modal onClose={onCerrar} className="es" ariaLabel={`Editar sistema ${sistema.nombre}`} zIndex={70}>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <div className="eshead">
         <div><div className="k">Editar sistema</div><h3 className="serif">{sistema.nombre}</h3></div>
         <button className="x" onClick={onCerrar} aria-label="Cerrar edición">×</button>

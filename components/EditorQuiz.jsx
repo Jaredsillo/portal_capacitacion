@@ -42,7 +42,7 @@ export default function EditorQuiz({ manual, onCerrar, onGuardado }) {
 
   return (
     <Modal onClose={onCerrar} className="ed" ariaLabel={`Juego del manual ${manual.titulo}`} zIndex={70}>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <div className="ehead">
         <div><div className="k">Juego posterior al manual</div><h3 className="serif">{manual.titulo}</h3></div>
         <button className="x" onClick={onCerrar} aria-label="Cerrar editor de juego">×</button>

@@ -42,7 +42,7 @@ export default function Ahorcado({ palabras }) {
 
   return (
     <div>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <div className="ah-top">
         <div className="ah-help">Adivina la palabra letra por letra antes de agotar los {MAX_ERRORES} intentos.</div>
         <div className="ah-cont">Palabra {Math.min(indice + 1, lista.length)}/{lista.length}</div>

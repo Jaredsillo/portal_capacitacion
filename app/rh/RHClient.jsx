@@ -26,7 +26,7 @@ export default function RHClient({ colaboradores, rolViendo, salir }) {
 
   return (
     <div>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <TopBar title="Panel de Talento Humano" salir={salir}>
         {rolViendo === "admin" && <a className="link" href="/dashboard">Ver como empleado</a>}
         {rolViendo === "admin" && <a className="link" href="/admin">Admin</a>}

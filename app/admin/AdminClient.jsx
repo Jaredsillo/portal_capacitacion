@@ -121,7 +121,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
 
   return (
     <div>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <TopBar title="Panel de Administración" salir={salir}>
         <a className="link" href="/dashboard">Ver como empleado</a>
       </TopBar>

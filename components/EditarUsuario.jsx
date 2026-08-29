@@ -36,7 +36,7 @@ export default function EditarUsuario({ usuario, onCerrar, onGuardado }) {
 
   return (
     <Modal onClose={onCerrar} className="eu" ariaLabel={`Editar a ${usuario.nombre}`} zIndex={70}>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <div className="euhead">
         <div><div className="k">Editar colaborador</div><h3 className="serif">{usuario.nombre}</h3></div>
         <button className="x" onClick={onCerrar} aria-label="Cerrar edición">×</button>

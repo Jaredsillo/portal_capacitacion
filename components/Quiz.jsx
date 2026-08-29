@@ -22,7 +22,7 @@ export default function Quiz({ sistema, onCerrar, onAprobado }) {
 
   return (
     <Modal onClose={onCerrar} className="quiz" ariaLabel={`Juego de ${sistema.nombre}`} zIndex={60}>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <div className="qhead">
         <div><div className="k">Juego · {sistema.nombre}</div>
           <h3 className="serif">Elige cómo practicar</h3></div>

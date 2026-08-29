@@ -88,7 +88,7 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
 
   return (
     <div>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <TopBar title="Portal de Capacitación" salir={salir}>
         <div className="col-hide" style={{ textAlign: "right" }}><div className="n">{usuario.nombre}</div><div className="e">{usuario.correo}</div></div>
         <div className="ava" aria-hidden="true">{(usuario.nombre || "U")[0]}</div>

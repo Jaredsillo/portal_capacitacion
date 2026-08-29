@@ -81,7 +81,7 @@ export default function SopaDeLetras({ palabras }) {
   const todo = encontradas.length === colocadas.length;
   return (
     <div>
-      <style>{CSS}</style>
+      <style suppressHydrationWarning>{CSS}</style>
       <div className="sopa-top">
         <div className="sopa-help">Une las letras de cada palabra: selecciona la primera y luego la última (con clic, o con flechas y Enter).</div>
         <div className="sopa-cont">{encontradas.length}/{colocadas.length}</div>
