@@ -184,7 +184,7 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
               {!esVideo && <div className="slider"><input type="range" min="1" max={numPages || visor.paginas || 1} value={pagina} onChange={(e) => irPagina(+e.target.value)} aria-label="Ir a la página" /></div>}
               {!esVideo && <span className="ind">Pág. {pagina} / {numPages || visor.paginas}</span>}
               {!esVideo && <button className="navbtn" onClick={() => irPagina(pagina + 1)} disabled={pagina >= (numPages || visor.paginas)} aria-label="Página siguiente">Siguiente ›</button>}
-              <button className="cta" disabled={!alFinal} onClick={terminarManual}>{visor.tieneQuiz ? "Ir a sopa de letras" : "Marcar como leído"}</button>
+              <button className="cta" disabled={!alFinal} onClick={terminarManual}>{visor.tieneQuiz ? "Ir al juego" : "Marcar como leído"}</button>
             </div>
           </div>
         </Modal>

@@ -274,7 +274,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
             </form>
             <div className="assignbox">
               <h4>Manuales y juegos</h4>
-              <p className="subt">Configura el juego de cada manual (sopa de letras o ahorcado) y sus palabras clave.</p>
+              <p className="subt">Captura las palabras clave de cada manual; el colaborador elige si las practica con sopa de letras o ahorcado.</p>
               <div className="table table-scroll" style={{ marginTop: 12 }}>
                 <table><thead><tr><th>Material</th><th>Sistema</th><th>Juego</th><th></th></tr></thead>
                   <tbody>{(manuales || []).map((m) => (

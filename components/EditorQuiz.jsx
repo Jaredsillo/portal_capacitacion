@@ -4,7 +4,6 @@ import Modal from "./Modal";
 
 export default function EditorQuiz({ manual, onCerrar, onGuardado }) {
   const [palabras, setPalabras] = useState([]);
-  const [tipoJuego, setTipoJuego] = useState("sopa");
   const [nuevaPalabra, setNuevaPalabra] = useState("");
   const [cargando, setCargando] = useState(true);
   const [msg, setMsg] = useState("");
@@ -14,7 +13,6 @@ export default function EditorQuiz({ manual, onCerrar, onGuardado }) {
   useEffect(() => {
     fetch(`/api/admin/quiz/${manual.id}`).then((r) => r.json()).then((d) => {
       setPalabras(d.palabras || []);
-      setTipoJuego(d.tipoJuego || "sopa");
       setCargando(false);
     }).catch(() => setCargando(false));
   }, [manual.id]);
@@ -35,7 +33,7 @@ export default function EditorQuiz({ manual, onCerrar, onGuardado }) {
     setGuardando(true); setMsg("");
     const r = await fetch("/api/admin/quiz-guardar", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ manualId: manual.id, tipoJuego, palabras }),
+      body: JSON.stringify({ manualId: manual.id, palabras }),
     });
     setGuardando(false);
     if (r.ok) { onGuardado?.(); onCerrar(); }
@@ -51,24 +49,13 @@ export default function EditorQuiz({ manual, onCerrar, onGuardado }) {
       </div>
 
       <div className="ebody">
-        {cargando ? <div className="skel" style={{ height: 160 }} aria-label="Cargando…" /> : (
+        {cargando ? <div className="skel" style={{ height: 120 }} aria-label="Cargando…" /> : (
           <>
-            <h4 className="subh">Tipo de juego</h4>
-            <p className="subt2">El colaborador lo juega justo después de terminar de leer el manual.</p>
-            <div className="juegos">
-              <label className={`juego ${tipoJuego === "sopa" ? "on" : ""}`}>
-                <input type="radio" name="tipoJuego" value="sopa" checked={tipoJuego === "sopa"} onChange={() => setTipoJuego("sopa")} />
-                <div><b>Sopa de letras</b><span>Encuentra las palabras en la cuadrícula.</span></div>
-              </label>
-              <label className={`juego ${tipoJuego === "ahorcado" ? "on" : ""}`}>
-                <input type="radio" name="tipoJuego" value="ahorcado" checked={tipoJuego === "ahorcado"} onChange={() => setTipoJuego("ahorcado")} />
-                <div><b>Ahorcado</b><span>Adivina cada palabra letra por letra.</span></div>
-              </label>
-            </div>
-
-            <div className="sep" />
             <h4 className="subh">Palabras clave</h4>
-            <p className="subt2">Palabras del manual (3 a 12 letras, sin espacios ni acentos). Máximo 10.</p>
+            <p className="subt2">
+              El colaborador las practica justo después de leer el manual, jugando la sopa de letras
+              o el ahorcado — él elige cuál. Captura de 3 a 12 letras, sin espacios ni acentos. Máximo 10.
+            </p>
             <div className={`palabras ${errorPalabras ? "campo-error-box" : ""}`}>
               {palabras.map((w) => (
                 <span key={w} className="tag">{w}<button onClick={() => quitarPalabra(w)} aria-label={`Quitar palabra ${w}`}>×</button></span>
@@ -102,14 +89,7 @@ const CSS = `
 .x{margin-left:auto;border:0;background:var(--bg);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:18px;color:var(--muted);}
 .ebody{padding:20px 22px;overflow-y:auto;}
 .subh{margin:0 0 3px;font-size:15px;font-weight:700;}
-.subt2{margin:0 0 12px;font-size:12.5px;color:var(--muted);}
-.juegos{display:flex;flex-direction:column;gap:10px;}
-.juego{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;}
-.juego.on{border-color:var(--azul);background:var(--verde-soft);}
-.juego input{width:18px;height:18px;accent-color:var(--azul);flex:none;}
-.juego b{display:block;font-size:14px;}
-.juego span{display:block;font-size:12px;color:var(--muted);margin-top:2px;}
-.sep{height:1px;background:var(--line);margin:20px 0;}
+.subt2{margin:0 0 12px;font-size:12.5px;color:var(--muted);line-height:1.5;}
 .palabras{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;min-height:32px;}
 .palabras.campo-error-box{outline:2px solid var(--error);outline-offset:4px;border-radius:8px;}
 .sinpalabras{font-size:12.5px;color:var(--muted);}
