@@ -2,6 +2,8 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import EditorQuiz from "@/components/EditorQuiz";
+import EditarUsuario from "@/components/EditarUsuario";
+import EditarSistema from "@/components/EditarSistema";
 import TopBar from "@/components/TopBar";
 import Toast from "@/components/Toast";
 import { IconDownload } from "@/components/icons";
@@ -16,6 +18,8 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
   const [sisForm, setSisForm] = useState({ nombre: "", descripcion: "", url_destino: "" });
   const [subida, setSubida] = useState({ sistema_id: "", titulo: "", codigo: "", version: "V00", archivo: null });
   const [editando, setEditando] = useState(null); // manual cuyo quiz se edita
+  const [editandoUsuario, setEditandoUsuario] = useState(null);
+  const [editandoSistema, setEditandoSistema] = useState(null);
   const [erroresForm, setErroresForm] = useState({});
   const [erroresSis, setErroresSis] = useState({});
   const [erroresSubida, setErroresSubida] = useState({});
@@ -217,7 +221,12 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
                       <td>{u.area || "—"}</td>
                       <td>{u.estado === "alta" ? <span className="ev ev-leido">activo</span> : <span className="ev ev-admin">baja</span>}</td>
                       <td style={{ color: "var(--muted)" }}>{u.ultimo}</td>
-                      <td>{u.estado === "alta" && u.rol !== "admin" && <button className="mini" onClick={() => darBaja(u.id)}>Baja</button>}</td>
+                      <td>
+                        <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
+                          <button className="mini" style={{ color: "var(--azul)" }} onClick={() => setEditandoUsuario(u)}>Editar</button>
+                          {u.estado === "alta" && u.rol !== "admin" && <button className="mini" onClick={() => darBaja(u.id)}>Baja</button>}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                   {usuariosFiltrados.length === 0 && <tr><td colSpan="5" style={{ textAlign: "center", padding: 24, color: "var(--muted)" }}>Sin resultados.</td></tr>}
@@ -240,10 +249,11 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
             <div className="assignbox">
               <h4>Sistemas registrados</h4>
               <div className="table table-scroll" style={{ marginTop: 12 }}>
-                <table><thead><tr><th>Sistema</th><th>URL</th></tr></thead>
+                <table><thead><tr><th>Sistema</th><th>URL</th><th></th></tr></thead>
                   <tbody>{sistemas.map((s) => (
                     <tr key={s.id}><td><b>{s.nombre}</b><div style={{ fontSize: 11, color: "var(--muted)" }}>{s.descripcion}</div></td>
-                      <td><a className="link" href={s.url_destino} target="_blank" rel="noopener">{s.url_destino}</a></td></tr>
+                      <td><a className="link" href={s.url_destino} target="_blank" rel="noopener">{s.url_destino}</a></td>
+                      <td><button className="mini" style={{ color: "var(--azul)" }} onClick={() => setEditandoSistema(s)}>Editar</button></td></tr>
                   ))}</tbody></table>
               </div>
             </div>
@@ -298,6 +308,14 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
       {editando && (
         <EditorQuiz manual={editando} onCerrar={() => setEditando(null)}
           onGuardado={() => { notar("Juego guardado.", "ok"); router.refresh(); }} />
+      )}
+      {editandoUsuario && (
+        <EditarUsuario usuario={editandoUsuario} onCerrar={() => setEditandoUsuario(null)}
+          onGuardado={() => { notar("Colaborador actualizado.", "ok"); router.refresh(); }} />
+      )}
+      {editandoSistema && (
+        <EditarSistema sistema={editandoSistema} onCerrar={() => setEditandoSistema(null)}
+          onGuardado={() => { notar("Sistema actualizado.", "ok"); router.refresh(); }} />
       )}
       <Toast mensaje={toast?.mensaje} tipo={toast?.tipo} />
     </div>
