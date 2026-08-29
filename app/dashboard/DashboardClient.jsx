@@ -40,7 +40,7 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
   const esVideo = visor?.materialTipo === "video";
   const alFinal = visor && (esVideo ? videoPct >= 95 : numPages > 0 && maxVista >= numPages);
 
-  // Al llegar al final: si hay evaluación, se toma; si no, se marca leído directo.
+  // Al llegar al final: si hay juego configurado, se juega; si no, se marca leído directo.
   function terminarManual() {
     const s = visor;
     if (s.tieneQuiz) { setVisor(null); setQuizSistema(s); }

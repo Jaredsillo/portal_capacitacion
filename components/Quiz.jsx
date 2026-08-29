@@ -1,35 +1,42 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import SopaDeLetras from "./SopaDeLetras";
+import Ahorcado from "./Ahorcado";
 import Modal from "./Modal";
 
-// Juego posterior al material: solo sopa de letras.
+const TITULOS = { ahorcado: "Ahorcado", sopa: "Sopa de letras" };
+
+// Juego posterior al material: sopa de letras o ahorcado, según lo configure el admin.
 export default function Quiz({ sistema, onCerrar, onAprobado }) {
   const [data, setData] = useState(null);
   const [err, setErr] = useState("");
 
   useEffect(() => {
     fetch(`/api/quiz/${sistema.id}`).then((r) => r.json())
-      .then((d) => d.error ? setErr(d.error) : setData(d)).catch(() => setErr("No se pudo cargar la evaluación."));
+      .then((d) => d.error ? setErr(d.error) : setData(d)).catch(() => setErr("No se pudo cargar el juego."));
   }, [sistema.id]);
 
+  const titulo = TITULOS[data?.tipoJuego] || "Juego";
+
   return (
-    <Modal onClose={onCerrar} className="quiz" ariaLabel={`Sopa de letras de ${sistema.nombre}`} zIndex={60}>
+    <Modal onClose={onCerrar} className="quiz" ariaLabel={`${titulo} de ${sistema.nombre}`} zIndex={60}>
       <style>{CSS}</style>
       <div className="qhead">
-        <div><div className="k">Evaluación · {sistema.nombre}</div>
-          <h3 className="serif">Sopa de letras</h3></div>
-        <button className="x" onClick={onCerrar} aria-label="Cerrar evaluación">×</button>
+        <div><div className="k">Juego · {sistema.nombre}</div>
+          <h3 className="serif">{titulo}</h3></div>
+        <button className="x" onClick={onCerrar} aria-label="Cerrar juego">×</button>
       </div>
 
       <div className="qbody">
         {err && <p className="msg-err" role="alert">{err}</p>}
-        {!data && !err && <div className="skel" style={{ height: 220 }} aria-label="Cargando sopa de letras…" />}
-        {data && <SopaDeLetras palabras={data.palabras || []} />}
+        {!data && !err && <div className="skel" style={{ height: 220 }} aria-label="Cargando juego…" />}
+        {data && (data.tipoJuego === "ahorcado"
+          ? <Ahorcado palabras={data.palabras || []} />
+          : <SopaDeLetras palabras={data.palabras || []} />)}
       </div>
 
       <div className="qfoot">
-        <span className="hint">Resuelve la sopa y cuando termines, completa el material.</span>
+        <span className="hint">Termina el juego y cuando quieras, completa el material.</span>
         <button className="cta" onClick={() => { onAprobado?.(); onCerrar?.(); }}>Completar material</button>
       </div>
     </Modal>

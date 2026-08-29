@@ -97,24 +97,28 @@ manuales/                  PDFs privados
 
 ---
 
-## v3 · Evaluaciones capturadas por el administrador (sin IA)
+## v3 · Juego capturado por el administrador (sin IA, sin preguntas)
 
-Esta versión **no usa ninguna API de pago**. Las evaluaciones las crea el administrador a mano.
+Esta versión **no usa ninguna API de pago**. El admin captura a mano solo las palabras clave del
+manual y elige con qué juego se practican; no hay banco de preguntas que mantener.
 
-- **Evaluación por manual**: el admin escribe preguntas de **opción múltiple** y **verdadero/falso**,
-  marca la respuesta correcta y (opcional) una explicación. Es **obligatoria**: el empleado debe
-  aprobar (puntaje mínimo configurable, por defecto 60%) para completar el manual.
-- **Sopa de letras**: el admin captura a mano las palabras clave (3 a 12 letras, sin acentos).
-- **Aviso al admin**: cuando un empleado aprueba, se marca el manual como leído y se envía el correo.
+- **Juego por manual**: el admin elige entre **sopa de letras** o **ahorcado** y captura las
+  palabras clave (3 a 12 letras, sin acentos, máximo 10). El colaborador lo juega justo después
+  de terminar de leer el manual — es una práctica ligera, no un examen con calificación.
+- **Aviso al admin**: al marcar el manual como leído se registra en `progreso_usuario` y se envía
+  el correo, igual que antes.
 
-### Cómo crear una evaluación (admin)
+### Cómo configurar el juego (admin)
 1. Pestaña **Sistemas** → crea el sistema si no existe.
-2. Pestaña **Manuales y evaluaciones** → sube el PDF.
-3. En la lista del manual, botón **Crear evaluación** → escribe las preguntas y las palabras → **Guardar**.
+2. Pestaña **Manuales y juegos** → sube el PDF.
+3. En la lista del manual, botón **Configurar juego** → elige sopa de letras o ahorcado, agrega las
+   palabras → **Guardar**.
 4. Asigna el sistema al personal en **Asignaciones**.
 
 ### Sin credenciales de IA
 Ya **no** se necesita `ANTHROPIC_API_KEY`. El `.env.local` solo requiere MySQL, Auth/Google y SMTP.
 
 ### Tablas usadas
-`quizzes`, `preguntas`, `palabras_clave`, `intentos_quiz` (ya incluidas en `db/schema.sql`).
+`quizzes` (guarda el tipo de juego en la columna `modelo`) y `palabras_clave`, ya incluidas en
+`db/schema.sql`. Las tablas `preguntas` e `intentos_quiz` quedan en el esquema por compatibilidad
+pero ya no las usa la aplicación.

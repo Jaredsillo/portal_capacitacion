@@ -117,7 +117,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
 
       <div className="wrap">
         <div className="subtabs">
-          {[["actividad", "Actividad"], ["asignaciones", "Asignaciones"], ["usuarios", "Usuarios"], ["sistemas", "Sistemas"], ["manuales", "Manuales y evaluaciones"]].map(([k, l]) => (
+          {[["actividad", "Actividad"], ["asignaciones", "Asignaciones"], ["usuarios", "Usuarios"], ["sistemas", "Sistemas"], ["manuales", "Manuales y juegos"]].map(([k, l]) => (
             <button key={k} className={`subtab ${tab === k ? "on" : ""}`} onClick={() => setTab(k)}>{l}</button>
           ))}
         </div>
@@ -254,7 +254,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
           <div className="assign">
             <form className="assignbox" onSubmit={subirManual} noValidate>
               <h4>Subir material (PDF o video)</h4>
-              <p className="subt">El archivo se guarda privado. Después puedes crear su evaluación.</p>
+              <p className="subt">El archivo se guarda privado. Después puedes configurar su juego.</p>
               <label className="fl">Sistema *
                 <select className={`fi ${erroresSubida.sistema_id ? "campo-error" : ""}`} value={subida.sistema_id}
                   onChange={(e) => { setSubida({ ...subida, sistema_id: e.target.value }); setErroresSubida((er) => ({ ...er, sistema_id: false })); }}>
@@ -273,19 +273,19 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
               <button className="save" type="submit">Subir material</button>
             </form>
             <div className="assignbox">
-              <h4>Manuales y evaluaciones</h4>
-              <p className="subt">Crea la evaluación de cada manual: preguntas de opción múltiple / V-F y las palabras de la sopa de letras.</p>
+              <h4>Manuales y juegos</h4>
+              <p className="subt">Configura el juego de cada manual (sopa de letras o ahorcado) y sus palabras clave.</p>
               <div className="table table-scroll" style={{ marginTop: 12 }}>
-                <table><thead><tr><th>Material</th><th>Sistema</th><th>Evaluación</th><th></th></tr></thead>
+                <table><thead><tr><th>Material</th><th>Sistema</th><th>Juego</th><th></th></tr></thead>
                   <tbody>{(manuales || []).map((m) => (
                     <tr key={m.id}><td><b>{m.codigo || m.titulo}</b><div style={{ fontSize: 11, color: "var(--muted)" }}>{m.paginas} pág. · {m.version}</div></td>
                       <td>{m.sistema}</td>
                       <td>
-                        <div>{m.tieneQuiz ? <span className="ev ev-leido">creada</span> : <span className="ev ev-admin">sin evaluación</span>}</div>
+                        <div>{m.tieneQuiz ? <span className="ev ev-leido">configurado</span> : <span className="ev ev-admin">sin juego</span>}</div>
                         <div style={{ marginTop: 4 }}><span className="ev ev-ver">{m.tipo === "video" ? "video" : "pdf"}</span></div>
                       </td>
                       <td><button className="mini" style={{ color: "var(--azul)" }} onClick={() => setEditando(m)}>
-                        {m.tieneQuiz ? "Editar" : "Crear evaluación"}</button></td>
+                        {m.tieneQuiz ? "Editar" : "Configurar juego"}</button></td>
                     </tr>
                   ))}
                   {(manuales || []).length === 0 && <tr><td colSpan="4" style={{ textAlign: "center", padding: 24, color: "var(--muted)" }}>Aún no hay materiales. Sube uno a la izquierda.</td></tr>}
@@ -297,7 +297,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
       </div>
       {editando && (
         <EditorQuiz manual={editando} onCerrar={() => setEditando(null)}
-          onGuardado={() => { notar("Evaluación guardada.", "ok"); router.refresh(); }} />
+          onGuardado={() => { notar("Juego guardado.", "ok"); router.refresh(); }} />
       )}
       <Toast mensaje={toast?.mensaje} tipo={toast?.tipo} />
     </div>

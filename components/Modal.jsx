@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 
-// Overlay accesible reutilizado por el visor, el quiz y el editor de evaluaciones:
+// Overlay accesible reutilizado por el visor, el juego y el editor del juego:
 // cierra con Escape, cierra al hacer click fuera, y manda el foco adentro al abrir.
 export default function Modal({ onClose, ariaLabel, className, zIndex, children }) {
   const panelRef = useRef(null);
