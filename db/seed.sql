@@ -1,7 +1,7 @@
 -- ── Datos iniciales ──
 -- 1) Cambia el correo del admin por el tuyo antes de correr esto.
 INSERT INTO usuarios (nombre_completo, correo, puesto, area, rol, estado, fecha_alta)
-VALUES ('Ángel Jared Vázquez Román', 'desarrollo.sistemas@uhipocrates.edu.mx',
+VALUES ('Angel Jared Vazquez Roman', 'desarrollo.sistemas@uhipocrates.edu.mx',
         'Desarrollador de Software', 'Coord. de Sistemas, Redes y Desarrollo Tecnológico',
         'admin', 'alta', CURDATE())
 ON DUPLICATE KEY UPDATE rol='admin';
