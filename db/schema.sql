@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   puesto            VARCHAR(160),
   area              VARCHAR(160),
   num_reloj_checador VARCHAR(40),
-  rol               ENUM('usuario','admin') NOT NULL DEFAULT 'usuario',
+  rol               ENUM('usuario','admin','th') NOT NULL DEFAULT 'usuario',
   estado            ENUM('alta','baja') NOT NULL DEFAULT 'alta',
   fecha_alta        DATE,
   fecha_baja        DATE,

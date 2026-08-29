@@ -4,7 +4,7 @@ export const runtime = "nodejs";
 
 export async function GET() {
   const session = await auth();
-  if (session?.user?.rol !== "admin") return new Response("solo admin", { status: 403 });
+  if (session?.user?.rol !== "admin" && session?.user?.rol !== "th") return new Response("sin acceso", { status: 403 });
   const filas = await reporteAvance();
   const head = ["Nombre", "Correo", "Área", "Sistema", "Manual", "Fecha lectura"];
   const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;

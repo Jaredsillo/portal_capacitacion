@@ -8,6 +8,8 @@ import TopBar from "@/components/TopBar";
 import Toast from "@/components/Toast";
 import { IconDownload } from "@/components/icons";
 
+const ROLES = { usuario: "Empleado", th: "Talento Humano", admin: "Administrador" };
+
 export default function AdminClient({ usuarios, sistemas, manuales, actividades, asignaciones: asigInicial, salir }) {
   const router = useRouter();
   const [tab, setTab] = useState("actividad");
@@ -205,7 +207,9 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
               <Field label="Núm. reloj checador" val={form.num_reloj_checador} on={(v) => setForm({ ...form, num_reloj_checador: v })} />
               <label className="fl">Rol
                 <select className="fi" value={form.rol} onChange={(e) => setForm({ ...form, rol: e.target.value })}>
-                  <option value="usuario">Empleado</option><option value="admin">Administrador</option>
+                  <option value="usuario">Empleado</option>
+                  <option value="th">Talento Humano</option>
+                  <option value="admin">Administrador</option>
                 </select>
               </label>
               <button className="save" type="submit">Dar de alta</button>
@@ -215,10 +219,11 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
               <input className="search" type="search" placeholder="Buscar por nombre o correo…" value={buscarUsuario}
                 onChange={(e) => setBuscarUsuario(e.target.value)} aria-label="Buscar colaborador" style={{ marginTop: 10 }} />
               <div className="table table-scroll" style={{ marginTop: 12 }}>
-                <table><thead><tr><th>Nombre</th><th>Área</th><th>Estado</th><th>Últ. acceso</th><th></th></tr></thead>
+                <table><thead><tr><th>Nombre</th><th>Área</th><th>Rol</th><th>Estado</th><th>Últ. acceso</th><th></th></tr></thead>
                   <tbody>{usuariosFiltrados.map((u) => (
                     <tr key={u.id}><td>{u.nombre}<div style={{ fontSize: 11, color: "var(--muted)" }}>{u.correo}</div></td>
                       <td>{u.area || "—"}</td>
+                      <td>{ROLES[u.rol] || u.rol}</td>
                       <td>{u.estado === "alta" ? <span className="ev ev-leido">activo</span> : <span className="ev ev-admin">baja</span>}</td>
                       <td style={{ color: "var(--muted)" }}>{u.ultimo}</td>
                       <td>
@@ -229,7 +234,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
                       </td>
                     </tr>
                   ))}
-                  {usuariosFiltrados.length === 0 && <tr><td colSpan="5" style={{ textAlign: "center", padding: 24, color: "var(--muted)" }}>Sin resultados.</td></tr>}
+                  {usuariosFiltrados.length === 0 && <tr><td colSpan="6" style={{ textAlign: "center", padding: 24, color: "var(--muted)" }}>Sin resultados.</td></tr>}
                   </tbody></table>
               </div>
             </div>

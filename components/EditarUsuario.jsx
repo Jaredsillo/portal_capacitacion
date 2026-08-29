@@ -50,7 +50,9 @@ export default function EditarUsuario({ usuario, onCerrar, onGuardado }) {
         <Field label="Núm. reloj checador" val={form.num_reloj_checador} on={(v) => set("num_reloj_checador", v)} />
         <label className="fl">Rol
           <select className="fi" value={form.rol} onChange={(e) => set("rol", e.target.value)}>
-            <option value="usuario">Empleado</option><option value="admin">Administrador</option>
+            <option value="usuario">Empleado</option>
+            <option value="th">Talento Humano</option>
+            <option value="admin">Administrador</option>
           </select>
         </label>
       </div>

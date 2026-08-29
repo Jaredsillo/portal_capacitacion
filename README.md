@@ -51,6 +51,18 @@ Ver `.env.example`. Necesitas:
 - Al marcar un manual como leído se registra en `progreso_usuario` + `actividades` y se
   **envía un correo al administrador**.
 
+### Roles
+- **usuario** (empleado): su dashboard con los sistemas/manuales que le asignaron.
+- **admin**: además de su dashboard, el panel `/admin` (usuarios, sistemas, asignaciones,
+  manuales/juegos, actividad) y puede entrar a `/rh` para revisar cómo se ve.
+- **th** (Talento Humano): un panel de **solo lectura** en `/rh` con el avance de cada
+  colaborador activo (manuales leídos/pendientes, últimos accesos) y el mismo botón de
+  exportar CSV que usa el admin. No puede dar de alta/baja, asignar, ni editar nada.
+
+> Si tu base de datos ya existía antes de que se agregara el rol `th`, corre la migración
+> `db/migrations/2026-08-29_rol_th.sql` (instrucciones dentro del archivo) — `npm run db:setup`
+> no la aplica solo porque las tablas ya existen.
+
 ## 5. Manuales (PDF)
 - Los PDF viven en la carpeta `/manuales` (fuera de `public`, se sirven por una ruta protegida
   `GET /api/manual/[sistemaId]` que valida sesión y asignación).
@@ -68,10 +80,11 @@ db/setup.js                Ejecuta schema + seed
 lib/db.js                  Pool MySQL
 lib/queries.js             Todas las consultas
 lib/mailer.js              Aviso por correo al admin
-lib/guard.js               requireUser / requireAdmin
+lib/guard.js               requireUser / requireAdmin / requireTH
 app/login                  Pantalla de Google
 app/dashboard              Panel del empleado (+ visor PDF)
 app/admin                  Panel del administrador
+app/rh                     Panel de Talento Humano (solo lectura)
 app/api/*                  Rutas: actividad, progreso, asignaciones, usuarios, manual
 manuales/                  PDFs privados
 ```
