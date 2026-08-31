@@ -101,13 +101,13 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
           <div className="heroleft">
             <div className="hi">Bienvenido de nuevo</div>
             <h1 className="serif">Hola, {(usuario.nombre || "").split(" ")[0]}.</h1>
-            <p>Cada sistema que te asignaron es una columna de tu templo. Lee su manual para levantarla y desbloquear el acceso.</p>
+            <p>Con cada manual que completes, tu templo se va iluminando de verde.</p>
             <div className="prog"><span className="big serif">{completados}</span><span className="lbl">de {conManual} manuales completados</span></div>
             <div className="track"><div className="fill" style={{ width: `${pct}%` }} /></div>
             <img className="mascota" src="/mascota.png" alt="Mascota Universidad Hipócrates" />
           </div>
           <div className="heroright">
-            <Templo sistemas={sistemas} />
+            <Templo completados={completados} total={conManual} />
           </div>
         </div>
 
@@ -219,21 +219,26 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
   );
 }
 
-function Templo({ sistemas }) {
-  const n = Math.max(sistemas.length, 1);
-  const colW = 26, gap = 12, padX = 30;
-  const width = padX * 2 + n * colW + (n - 1) * gap;
+// Templo fijo de 4 pilares (mismo estilo que el logo): se pintan de verde en
+// proporción al avance general, sin importar cuántos sistemas tenga la persona.
+// Con 0 sistemas asignados esto evita el "templo" de una sola columna a medias.
+function Templo({ completados, total }) {
+  const pilares = 4;
+  const llenos = total > 0 ? Math.round((completados / total) * pilares) : 0;
+  const colW = 34, gap = 22, padX = 30;
+  const width = padX * 2 + pilares * colW + (pilares - 1) * gap;
   const baseY = 168, top = 70, colH = baseY - top;
   return (
-    <svg style={{ display: "block", margin: "0 auto", maxWidth: 380, width: "100%" }} viewBox={`0 0 ${width} 210`}>
+    <svg style={{ display: "block", margin: "0 auto", maxWidth: 320, width: "100%" }} viewBox={`0 0 ${width} 210`} role="img"
+      aria-label={`Progreso general: ${llenos} de ${pilares} pilares completados`}>
       <polygon points={`${padX - 10},${top} ${width / 2},28 ${width - padX + 10},${top}`} fill="#EAF2FF" stroke="#6AC72A" strokeWidth="3.5" strokeLinejoin="round" />
       <rect x={padX - 14} y={top} width={width - (padX - 14) * 2} height="12" rx="2" fill="#004CA6" />
-      {sistemas.map((s, i) => {
-        const x = padX + i * (colW + gap); const on = s.leido;
+      {Array.from({ length: pilares }).map((_, i) => {
+        const x = padX + i * (colW + gap); const on = i < llenos;
         return (
-          <g key={s.id}>
+          <g key={i}>
             <rect x={x - 3} y={top + 12} width={colW + 6} height="8" rx="2" fill={on ? "#6AC72A" : "#D4DCEA"} />
-            <rect x={x} y={top + 20} width={colW} height={colH - 28} rx="3" fill={on ? "#004CA6" : "#EAEEF6"} stroke={on ? "#0A3C7D" : "#D4DCEA"} strokeWidth="1.5" />
+            <rect x={x} y={top + 20} width={colW} height={colH - 28} rx="5" fill={on ? "#004CA6" : "#EAEEF6"} stroke={on ? "#0A3C7D" : "#D4DCEA"} strokeWidth="1.5" />
             <rect x={x - 4} y={baseY - 8} width={colW + 8} height="8" rx="2" fill={on ? "#004CA6" : "#D4DCEA"} />
           </g>
         );
