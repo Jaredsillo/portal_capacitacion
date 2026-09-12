@@ -64,21 +64,25 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
     else { const d = await r.json().catch(() => ({})); notar(d.error || "No se pudo subir el material.", "error"); }
   }
 
-  async function toggleAsig(usuarioId, sistemaId) {
+  async function toggleAsig(usuarioId, sistemaId, silencioso) {
     const activo = asignaciones[usuarioId]?.includes(sistemaId);
     setAsignaciones((a) => {
       const cur = a[usuarioId] || [];
       return { ...a, [usuarioId]: activo ? cur.filter((x) => x !== sistemaId) : [...cur, sistemaId] };
     });
-    await fetch("/api/asignaciones", { method: "POST", headers: { "Content-Type": "application/json" },
+    const nombreSis = sistemas.find((s) => s.id === sistemaId)?.nombre || "sistema";
+    const r = await fetch("/api/asignaciones", { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ usuarioId, sistemaId, activar: !activo }) });
+    if (silencioso) return;
+    if (r.ok) notar(activo ? `Se quitó "${nombreSis}".` : `Se asignó "${nombreSis}".`, "ok");
+    else notar("No se pudo guardar la asignación.", "error");
   }
 
   // Asignación masiva: marca o quita de un jalón todos los sistemas de la persona seleccionada.
   async function asignarTodos(usuarioId, activar) {
     const pendientes = sistemas.filter((s) => Boolean(asignaciones[usuarioId]?.includes(s.id)) !== activar);
     if (pendientes.length === 0) return;
-    for (const s of pendientes) await toggleAsig(usuarioId, s.id);
+    for (const s of pendientes) await toggleAsig(usuarioId, s.id, true);
     notar(activar ? "Se asignaron todos los sistemas." : "Se quitaron todos los sistemas.", "ok");
   }
 
