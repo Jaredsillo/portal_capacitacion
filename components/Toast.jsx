@@ -1,14 +1,36 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // Notificación flotante con variante visual según el tipo de mensaje.
+// Entra deslizando desde abajo y sale un poco más rápido de lo que entró
+// (la salida siempre debe sentirse ágil); sigue mostrando el último mensaje
+// mientras se desvanece, en vez de desaparecer de golpe.
 export default function Toast({ mensaje, tipo = "info" }) {
-  if (!mensaje) return null;
-  const clase = tipo === "error" ? "toast err" : tipo === "ok" ? "toast ok" : "toast";
+  const [visible, setVisible] = useState(false);
+  const [mostrado, setMostrado] = useState(null);
+  const salidaRef = useRef(null);
+
+  useEffect(() => {
+    if (mensaje) {
+      clearTimeout(salidaRef.current);
+      setMostrado({ mensaje, tipo });
+      const id = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(id);
+    }
+    if (mostrado) {
+      setVisible(false);
+      salidaRef.current = setTimeout(() => setMostrado(null), 180);
+    }
+    return () => clearTimeout(salidaRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mensaje, tipo]);
+
+  if (!mostrado) return null;
+  const clase = mostrado.tipo === "error" ? "toast err" : mostrado.tipo === "ok" ? "toast ok" : "toast";
   return (
-    <div className={clase} role="status" aria-live="polite">
-      {tipo === "error" ? <IconoAlerta /> : tipo === "ok" ? <IconoCheck /> : null}
-      {mensaje}
+    <div className={clase} data-visible={visible} role="status" aria-live="polite">
+      {mostrado.tipo === "error" ? <IconoAlerta /> : mostrado.tipo === "ok" ? <IconoCheck /> : null}
+      {mostrado.mensaje}
     </div>
   );
 }

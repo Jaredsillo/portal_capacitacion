@@ -103,7 +103,7 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
             <h1 className="serif">Hola, {(usuario.nombre || "").split(" ")[0]}.</h1>
             <p>Con cada manual que completes, tu templo se va iluminando de verde.</p>
             <div className="prog"><span className="big serif">{completados}</span><span className="lbl">de {conManual} manuales completados</span></div>
-            <div className="track"><div className="fill" style={{ width: `${pct}%` }} /></div>
+            <div className="track"><div className="fill" style={{ width: `${pct}%`, background: pct >= 100 ? "var(--verde-2)" : "var(--azul)" }} /></div>
             <img className="mascota" src="/mascota.png" alt="Mascota Universidad Hipócrates" />
           </div>
           <div className="heroright">
@@ -116,7 +116,7 @@ export default function DashboardClient({ usuario, sistemas: inicial, salir }) {
           {sistemas.map((s, i) => {
             const bloqueado = s.tieneManual && !s.leido;
             return (
-              <div key={s.id} className={`card ${s.leido ? "done" : ""}`}>
+              <div key={s.id} className={`card ${s.leido ? "done" : ""}`} style={{ "--i": Math.min(i, 8) }}>
                 <div className="ctop">
                   <div className="num">{i + 1}</div>
                   {s.visitado ? <span className="chip chip-done">Acceso registrado</span>
@@ -252,10 +252,12 @@ function Templo({ completados, total }) {
 const CSS = `
 .user .n{font-size:13px;font-weight:600;line-height:1.1;}.user .e{font-size:11px;color:var(--muted);}
 .wrap{max-width:1080px;margin:0 auto;padding:26px 28px 64px;}
-.hero{background:linear-gradient(180deg,var(--card),var(--bg));border:1px solid var(--line);border-radius:20px;padding:30px 32px;display:grid;grid-template-columns:1.05fr 1fr;gap:28px;align-items:center;overflow:hidden;}
-.heroright{display:flex;flex-direction:column;align-items:center;}
-.heroleft{position:relative;padding-right:70px;}
-.mascota{position:absolute;right:0;bottom:0;height:132px;filter:drop-shadow(0 10px 12px var(--shadow));pointer-events:none;}
+.hero{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 32px;display:grid;grid-template-columns:1.32fr .82fr;gap:28px;align-items:center;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-90px;right:-70px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,var(--verde-soft) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.hero::after{content:"";position:absolute;bottom:-120px;left:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--bg) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.heroright{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;}
+.heroleft{position:relative;z-index:1;padding-right:70px;}
+.mascota{position:absolute;right:-4px;bottom:-2px;height:132px;filter:drop-shadow(0 10px 12px var(--shadow));pointer-events:none;transform:rotate(-2.5deg);}
 .icon-line{display:inline-flex;align-items:center;gap:5px;}
 .repasar{margin-top:10px;width:100%;font:inherit;font-size:12.5px;font-weight:600;padding:8px;border-radius:9px;border:1px dashed var(--line);background:var(--bg);color:var(--azul);cursor:pointer;}
 .repasar:hover{background:var(--verde-soft);border-color:var(--azul);}
@@ -265,12 +267,15 @@ const CSS = `
 .prog{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;}
 .prog .big{font-size:38px;font-weight:700;color:var(--azul);}.prog .lbl{font-size:14px;color:var(--muted);}
 .track{height:10px;background:var(--line);border-radius:99px;overflow:hidden;}
-.fill{height:100%;background:linear-gradient(90deg,var(--azul),var(--verde));border-radius:99px;transition:width .6s cubic-bezier(.2,.8,.2,1);}
+.fill{height:100%;border-radius:99px;transition:width var(--dur-slow) var(--ease-in-out),background-color var(--dur-slow) ease;}
 .sec{display:flex;align-items:baseline;justify-content:space-between;margin:34px 4px 16px;}
 .sec h2{font-size:22px;font-weight:600;margin:0;}.sec .cnt{font-size:13px;color:var(--muted);}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s,border-color .18s;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;
+  transition:transform .18s var(--ease-out),box-shadow .18s var(--ease-out),border-color .18s var(--ease-out);
+  animation:card-in .42s var(--ease-out) backwards;animation-delay:calc(var(--i,0) * 45ms);}
 .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px -12px var(--shadow);border-color:var(--azul-2);}
+@keyframes card-in{from{opacity:0;transform:translateY(10px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
 .card.done{border-color:var(--verde);}
 .ctop{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
 .num{width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:700;font-size:18px;color:#fff;background:var(--azul);}
@@ -282,7 +287,7 @@ const CSS = `
 .card .d{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0 0 12px;flex:1;}
 .meta{font-size:11px;color:var(--muted);margin:0 0 16px;}
 .acts{display:flex;gap:8px;}
-.btn{flex:1;font:inherit;font-size:13px;font-weight:600;padding:9px 10px;border-radius:9px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn{flex:1;font:inherit;font-size:13px;font-weight:600;padding:9px 10px;border-radius:9px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);transition:border-color .15s var(--ease-out),color .15s var(--ease-out),background-color .15s var(--ease-out),transform var(--dur-fast) var(--ease-out);display:flex;align-items:center;justify-content:center;gap:6px;}
 .btn:hover{border-color:var(--azul);color:var(--azul);}
 .btn.prim{background:var(--azul);border-color:var(--azul);color:#fff;}.btn.prim:hover{background:var(--azul-3);}
 .btn.lock{opacity:.55;cursor:not-allowed;background:var(--bg);color:var(--muted);border-color:var(--line);}

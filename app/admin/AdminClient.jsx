@@ -377,8 +377,9 @@ const CSS = `
 .assignhead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;}
 .bulkacts{display:flex;gap:8px;flex:none;}
 .row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);}.row:last-child{border-bottom:0;}
-.check{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;cursor:pointer;flex:none;transition:all .15s;background:var(--card);color:#fff;font-size:13px;}
-.check.on{background:var(--verde-2);border-color:var(--verde-2);}
+.check{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;cursor:pointer;flex:none;transition:background-color .15s var(--ease-out),border-color .15s var(--ease-out),transform var(--dur-fast) var(--ease-out);background:var(--card);color:#fff;font-size:13px;}
+.check.on{background:var(--verde-2);border-color:var(--verde-2);animation:check-pop .28s var(--ease-out);}
+@keyframes check-pop{0%{transform:scale(.8);}55%{transform:scale(1.12);}100%{transform:scale(1);}}
 .row .rn{font-size:14px;font-weight:600;flex:1;}.row .rp{font-size:12px;color:var(--muted);}
 .fl{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:14px;}
 .fi{display:block;width:100%;margin-top:6px;font:inherit;font-size:14px;color:var(--ink);padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--card);}

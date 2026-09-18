@@ -1,22 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap');
 :root{
   --azul:#004CA6;--azul-2:#0A3C7D;--azul-3:#003A80;
   --verde:#6AC72A;--verde-2:#4EA817;--verde-soft:#EAF7DE;
   --ink:#14213A;--muted:#5B6B85;--bg:#F4F6FA;--card:#FFFFFF;--line:#E3E8F1;
   --error:#C0392B;--error-soft:#FBEAE8;--focus:#2C7BE5;
   --shadow:rgba(20,33,58,.22);
+
+  /* Curvas y duraciones de motion: nada de ease-in en UI, todo interrumpible. */
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --dur-fast:140ms;
+  --dur:200ms;
+  --dur-slow:320ms;
 }
 
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;transition:background-color .2s,color .2s;}
+body{font-family:'Public Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;transition:background-color .2s,color .2s;}
 .serif{font-family:'Fraunces',Georgia,serif;}
 a{color:inherit;}
 img{max-width:100%;}
 
 /* Foco visible consistente para teclado (accesibilidad) */
 :focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;border-radius:4px;}
-button,[role="button"]{-webkit-tap-highlight-color:transparent;}
+
+/* Feedback de presión: toda la interfaz responde a un toque, no solo algunos botones. */
+button,[role="button"],[role="checkbox"]{-webkit-tap-highlight-color:transparent;transition:transform var(--dur-fast) var(--ease-out);}
+button:not(:disabled):active,[role="button"]:active,[role="checkbox"]:active{transform:scale(.97);}
 
 /* Tablas: nunca desbordan la página, hacen scroll horizontal propio */
 .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
@@ -37,11 +47,17 @@ button,[role="button"]{-webkit-tap-highlight-color:transparent;}
 .link{background:none;border:0;font:inherit;font-size:13px;font-weight:600;color:var(--azul);cursor:pointer;text-decoration:none;}
 .link:hover{text-decoration:underline;}
 
-/* ── Overlay de modales (visor, quiz, editor) ── */
-.ov{position:fixed;inset:0;background:rgba(15,25,48,.55);display:grid;place-items:center;padding:20px;z-index:50;}
+/* ── Overlay de modales (visor, quiz, editor) ──
+   El panel entra con escala+opacidad (nunca desde 0: nada aparece de la nada),
+   el fondo hace fade aparte. Ver Modal.jsx para el manejo del estado de montaje. */
+.ov{position:fixed;inset:0;background:rgba(15,25,48,0);display:grid;place-items:center;padding:20px;z-index:50;transition:background-color var(--dur-slow) var(--ease-out);}
+.ov[data-visible="true"]{background:rgba(15,25,48,.55);}
+.modalpanel{transform:scale(.96) translateY(6px);opacity:0;transition:transform var(--dur-slow) var(--ease-out),opacity var(--dur-slow) var(--ease-out);}
+.modalpanel[data-visible="true"]{transform:scale(1) translateY(0);opacity:1;}
 
-/* ── Toasts con variante de éxito / error ── */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--card);padding:12px 20px;border-radius:11px;font-size:13.5px;font-weight:500;z-index:80;box-shadow:0 12px 30px -8px var(--shadow);}
+/* ── Toasts con variante de éxito / error: entra deslizando, sale más rápido ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,10px);opacity:0;display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--card);padding:12px 20px;border-radius:11px;font-size:13.5px;font-weight:500;z-index:80;box-shadow:0 12px 30px -8px var(--shadow);transition:transform var(--dur) var(--ease-out),opacity var(--dur) var(--ease-out);}
+.toast[data-visible="true"]{transform:translate(-50%,0);opacity:1;}
 .toast.err{background:var(--error);color:#fff;}
 .toast.ok{background:var(--verde-2);color:#fff;}
 

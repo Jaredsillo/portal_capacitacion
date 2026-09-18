@@ -128,10 +128,11 @@ const CSS = `
 .sopa-help{font-size:12.5px;color:var(--muted);}
 .sopa-cont{font-size:13px;font-weight:700;color:var(--azul);white-space:nowrap;}
 .sopa-grid{display:grid;gap:3px;max-width:420px;margin:0 auto;}
-.sopa-cell{aspect-ratio:1;border:0;background:var(--bg);border-radius:5px;font:inherit;font-weight:700;font-size:13px;color:var(--ink);cursor:pointer;transition:all .12s;}
+.sopa-cell{aspect-ratio:1;border:0;background:var(--bg);border-radius:5px;font:inherit;font-weight:700;font-size:13px;color:var(--ink);cursor:pointer;transition:background-color .12s var(--ease-out),color .12s var(--ease-out);}
 .sopa-cell:hover{background:var(--line);}
 .sopa-cell.sel{background:var(--azul);color:#fff;}
-.sopa-cell.hit{background:var(--verde);color:#fff;}
+.sopa-cell.hit{background:var(--verde);color:#fff;animation:sopa-hit .32s var(--ease-out);}
+@keyframes sopa-hit{0%{transform:scale(1);}50%{transform:scale(1.12);}100%{transform:scale(1);}}
 .sopa-words{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
 .sopa-word{font-size:12px;font-weight:600;color:var(--muted);padding:4px 10px;border-radius:99px;background:var(--bg);}
 .sopa-word.done{background:var(--verde-soft);color:var(--verde-2);text-decoration:line-through;}
