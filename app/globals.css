@@ -16,7 +16,13 @@
 
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{font-family:'Public Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;transition:background-color .2s,color .2s;}
+body{font-family:'Public Sans',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;transition:background-color .2s,color .2s;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(0,76,166,.05) 0%,transparent 40%),
+    radial-gradient(circle at 0% 100%,rgba(106,199,42,.05) 0%,transparent 40%),
+    var(--bg);
+  background-attachment:fixed;
+}
 .serif{font-family:'Fraunces',Georgia,serif;}
 a{color:inherit;}
 img{max-width:100%;}

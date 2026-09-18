@@ -147,10 +147,10 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
               </a>
             </div>
             <div className="stats">
-              <Stat v={usuarios.filter((u) => u.estado === "alta").length} l="Empleados activos" />
-              <Stat v={actividades.filter((a) => a.evento === "marcar_leido").length} l="Manuales leídos" />
-              <Stat v={actividades.filter((a) => a.evento === "click_sistema").length} l="Accesos a sistemas" />
-              <Stat v={actividades.length} l="Eventos registrados" />
+              <Stat i={0} v={usuarios.filter((u) => u.estado === "alta").length} l="Empleados activos" />
+              <Stat i={1} v={actividades.filter((a) => a.evento === "marcar_leido").length} l="Manuales leídos" />
+              <Stat i={2} v={actividades.filter((a) => a.evento === "click_sistema").length} l="Accesos a sistemas" />
+              <Stat i={3} v={actividades.length} l="Eventos registrados" />
             </div>
             <div className="table table-scroll">
               <table><thead><tr><th>Usuario</th><th>Evento</th><th>Detalle</th><th>Fecha y hora</th></tr></thead>
@@ -336,7 +336,7 @@ export default function AdminClient({ usuarios, sistemas, manuales, actividades,
   );
 }
 
-function Stat({ v, l }) { return <div className="stat"><div className="v">{v}</div><div className="l">{l}</div></div>; }
+function Stat({ v, l, i }) { return <div className="stat" style={{ "--i": i || 0 }}><div className="v">{v}</div><div className="l">{l}</div></div>; }
 function Field({ label, val, on, ph, error }) {
   return (
     <label className="fl">{label}
@@ -350,24 +350,27 @@ function Field({ label, val, on, ph, error }) {
 const CSS = `
 .wrap{max-width:1080px;margin:0 auto;padding:26px 28px 64px;}
 .subtabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap;}
-.subtab{border:1px solid var(--line);background:var(--card);font:inherit;font-size:13px;font-weight:600;color:var(--muted);padding:8px 16px;border-radius:9px;cursor:pointer;}
+.subtab{border:1px solid var(--line);background:var(--card);font:inherit;font-size:13px;font-weight:600;color:var(--muted);padding:8px 16px;border-radius:9px;cursor:pointer;transition:background-color .15s var(--ease-out),border-color .15s var(--ease-out),color .15s var(--ease-out);}
 .subtab.on{background:var(--azul);border-color:var(--azul);color:#fff;}
 .toolrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
 .search{font:inherit;font-size:13.5px;padding:9px 13px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);min-width:240px;}
 .searchpeople{width:100%;margin-bottom:8px;}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
+.stat{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px 16px 20px;
+  animation:panel-in .34s var(--ease-out) backwards;animation-delay:calc(var(--i,0) * 45ms);}
+.stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--azul);}
 .stat .v{font-size:26px;font-weight:700;color:var(--azul);font-family:'Fraunces',serif;}.stat .l{font-size:12.5px;color:var(--muted);margin-top:2px;}
-.table{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+@keyframes panel-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.table{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:panel-in .3s var(--ease-out);}
 .table table{width:100%;border-collapse:collapse;font-size:13.5px;}
 .table th{text-align:left;padding:12px 18px;background:var(--bg);color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.03em;text-transform:uppercase;border-bottom:1px solid var(--line);white-space:nowrap;}
 .table td{padding:12px 18px;border-bottom:1px solid var(--line);}.table tr:last-child td{border-bottom:0;}
 .ev{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;}
 .ev-login{background:#E7EEFA;color:#0A3C7D;}.ev-ver{background:#FEF3E2;color:#B7791F;}
 .ev-leido{background:var(--verde-soft);color:var(--verde-2);}.ev-click{background:#EDE9FB;color:#6D4AC7;}.ev-admin{background:#F0F1F4;color:#5B6B85;}
-.assign{display:grid;grid-template-columns:260px 1fr;gap:18px;}
+.assign{display:grid;grid-template-columns:260px 1fr;gap:18px;animation:panel-in .3s var(--ease-out);}
 .people{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px;height:fit-content;}
-.person{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;}
+.person{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:background-color .15s var(--ease-out);}
 .person:hover{background:var(--bg);}.person.on{background:var(--verde-soft);}
 .person .pa{width:34px;height:34px;border-radius:50%;background:var(--azul);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none;}
 .person .pn{font-size:13.5px;font-weight:600;}.person .pd{font-size:11.5px;color:var(--muted);}

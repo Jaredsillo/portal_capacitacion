@@ -42,10 +42,10 @@ export default function RHClient({ colaboradores, rolViendo, salir }) {
         </div>
 
         <div className="stats">
-          <Stat v={colaboradores.length} l="Colaboradores activos" />
-          <Stat v={`${avancePromedio}%`} l="Avance promedio" />
-          <Stat v={alDia} l="Al día con sus manuales" />
-          <Stat v={conPendientes} l="Con manuales pendientes" />
+          <Stat i={0} v={colaboradores.length} l="Colaboradores activos" />
+          <Stat i={1} v={`${avancePromedio}%`} l="Avance promedio" />
+          <Stat i={2} v={alDia} l="Al día con sus manuales" />
+          <Stat i={3} v={conPendientes} l="Con manuales pendientes" />
         </div>
 
         <div className="table table-scroll">
@@ -89,7 +89,7 @@ export default function RHClient({ colaboradores, rolViendo, salir }) {
   );
 }
 
-function Stat({ v, l }) { return <div className="stat"><div className="v">{v}</div><div className="l">{l}</div></div>; }
+function Stat({ v, l, i }) { return <div className="stat" style={{ "--i": i || 0 }}><div className="v">{v}</div><div className="l">{l}</div></div>; }
 
 const CSS = `
 .wrap{max-width:1080px;margin:0 auto;padding:26px 28px 64px;}
@@ -97,10 +97,13 @@ const CSS = `
 .search{font:inherit;font-size:13.5px;padding:9px 13px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);min-width:260px;}
 .save{font:inherit;font-size:14px;font-weight:600;padding:11px 20px;border-radius:10px;border:0;cursor:pointer;background:var(--azul);color:#fff;}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
+.stat{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px 16px 20px;
+  animation:panel-in .34s var(--ease-out) backwards;animation-delay:calc(var(--i,0) * 45ms);}
+.stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--azul);}
 .stat .v{font-size:26px;font-weight:700;color:var(--azul);font-family:'Fraunces',serif;}
 .stat .l{font-size:12.5px;color:var(--muted);margin-top:2px;}
-.table{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+@keyframes panel-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.table{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:panel-in .3s var(--ease-out);}
 .table table{width:100%;border-collapse:collapse;font-size:13.5px;}
 .table th{text-align:left;padding:12px 18px;background:var(--bg);color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.03em;text-transform:uppercase;border-bottom:1px solid var(--line);white-space:nowrap;}
 .table td{padding:12px 18px;border-bottom:1px solid var(--line);vertical-align:top;}
