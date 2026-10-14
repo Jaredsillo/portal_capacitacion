@@ -53,8 +53,8 @@ export default function EditorQuiz({ manual, onCerrar, onGuardado }) {
           <>
             <h4 className="subh">Palabras clave</h4>
             <p className="subt2">
-              El colaborador las practica justo después de leer el manual, jugando la sopa de letras
-              o el ahorcado — él elige cuál. Captura de 3 a 12 letras, sin espacios ni acentos. Máximo 10.
+              El colaborador las practica justo después de leer el manual, con sopa de letras, ahorcado
+              o memorama — él elige cuál. Captura de 3 a 12 letras, sin espacios ni acentos. Máximo 10.
             </p>
             <div className={`palabras ${errorPalabras ? "campo-error-box" : ""}`}>
               {palabras.map((w) => (

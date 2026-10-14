@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from "react";
 import SopaDeLetras from "./SopaDeLetras";
 import Ahorcado from "./Ahorcado";
+import Memorama from "./Memorama";
 import Modal from "./Modal";
 
 const JUEGOS = [
   { id: "sopa", nombre: "Sopa de letras" },
   { id: "ahorcado", nombre: "Ahorcado" },
+  { id: "memorama", nombre: "Memorama" },
 ];
 
 // Juego posterior al material: el empleado elige entre sopa de letras o ahorcado.
@@ -41,6 +43,8 @@ export default function Quiz({ sistema, onCerrar, onAprobado }) {
         {!data && !err && <div className="skel" style={{ height: 220 }} aria-label="Cargando juego…" />}
         {data && (juego === "ahorcado"
           ? <Ahorcado key="ahorcado" palabras={data.palabras || []} />
+          : juego === "memorama"
+          ? <Memorama key="memorama" palabras={data.palabras || []} />
           : <SopaDeLetras key="sopa" palabras={data.palabras || []} />)}
       </div>
 
